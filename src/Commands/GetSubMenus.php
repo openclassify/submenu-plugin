@@ -26,7 +26,14 @@ class GetSubMenus
             }
         );
 
-//        dd($modules->first()->getSections());
+        if ($parent == "anomaly.module.settings")
+        {
+            $modules = $items->filter(
+                function ($addon) use ($parent) {
+                    return in_array($addon->slug ,['variables','system','redirects','repeaters']);
+                }
+            );
+        }
 
         $links = new SubmenuCollection();
 
@@ -34,7 +41,7 @@ class GetSubMenus
             $sections = $this->buildSection($module);
             foreach ($sections as $section) {
                 $links->add([
-                    'title' => $section['title'],
+                    'title' => trans($section['title'])."(".$module->slug.")",
                     'slug' => $section['slug'],
                     'href' => $section['attributes']['href'],
                 ]);
