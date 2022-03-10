@@ -28,6 +28,39 @@ class GetSections
             ]);
         }
 
+
+        $items = app('module.collection')->installed();
+
+        $parent = $this->namespace;
+
+        $modules = $items->filter(
+            function ($addon) use ($parent) {
+                return (isset($addon->parent) && $addon->parent == $parent);
+            }
+        );
+
+        if ($parent == "anomaly.module.settings")
+        {
+            $modules = $items->filter(
+                function ($addon) use ($parent) {
+                    return in_array($addon->slug ,['variables','system','redirects','repeaters']);
+                }
+            );
+        }
+
+        foreach ($modules as $module)
+        {
+            $sections = $this->buildSection($module);
+
+            foreach ($sections as $section) {
+                $links->add([
+                    'title' => trans($section['title'])."(".$module->slug.")",
+                    'slug' => $section['slug'],
+                    'href' => $section['attributes']['href'],
+                ]);
+            }
+        }
+
         return $links;
     }
 
