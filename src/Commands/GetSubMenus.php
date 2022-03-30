@@ -26,56 +26,61 @@ class GetSubMenus
             }
         );
 
-        if ($parent == "anomaly.module.settings")
-        {
+        if ($parent == "anomaly.module.settings") {
             $modules = $items->filter(
                 function ($addon) use ($parent) {
-                    return in_array($addon->slug ,['variables','system','redirects','repeaters']);
+                    return in_array($addon->slug, ['variables', 'system', 'redirects', 'repeaters']);
                 }
             );
         }
 
-        $links = new SubmenuCollection();
+        $sub_list = array();
 
         foreach ($modules as $module) {
+            $links = new SubmenuCollection();
             $sections = $this->buildSection($module);
+
             foreach ($sections as $section) {
                 $links->add([
-                    'title' => trans($section['title'])."(".$module->slug.")",
+                    'title' => trans($section['title']),
                     'slug' => $section['slug'],
                     'href' => $section['attributes']['href'],
                 ]);
             }
+
+            $sub_list[$module->namespace]['links'] = $links;
+            $sub_list[$module->namespace]['name'] = trans($module->namespace."::addon.title");
         }
 
-        return $links;
+        return $sub_list;
     }
 
     public function buildSection($module)
     {
         $sections = $module->getSections();
 
-        foreach ($sections as $slug => &$section) {
-            if (isset($section['sections'])) {
-                foreach ($section['sections'] as $key => $child) {
+//        foreach ($sections as $slug => &$section) {
+//            if (isset($section['sections'])) {
+//                foreach ($section['sections'] as $key => $child) {
+//
+//                    /**
+//                     * It's a slug only!
+//                     */
+//                    if (is_string($child)) {
+//
+//                        $key = $child;
+//
+//                        $child = ['slug' => $child];
+//                    }
+//
+//                    $child['parent'] = array_get($section, 'slug', $slug);
+//                    $child['slug'] = array_get($child, 'slug', $key);
+//
+//                    $sections[$key] = $child;
+//                }
+//            }
+//        }
 
-                    /**
-                     * It's a slug only!
-                     */
-                    if (is_string($child)) {
-
-                        $key = $child;
-
-                        $child = ['slug' => $child];
-                    }
-
-                    $child['parent'] = array_get($section, 'slug', $slug);
-                    $child['slug'] = array_get($child, 'slug', $key);
-
-                    $sections[$key] = $child;
-                }
-            }
-        }
 
         /*
          * Loop over each section and make sense of the input
