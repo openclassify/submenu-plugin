@@ -1,6 +1,7 @@
 <?php namespace Visiosoft\SubmenuPlugin;
 
 use Anomaly\Streams\Platform\Addon\Plugin\Plugin;
+use Visiosoft\SubmenuPlugin\Commands\GetInteractiveMenus;
 use Visiosoft\SubmenuPlugin\Commands\GetSections;
 use Visiosoft\SubmenuPlugin\Commands\GetSubMenus;
 
@@ -13,6 +14,12 @@ class SubmenuPlugin extends Plugin
                 'getSubmenus',
                 function ($namespace) {
                     return $this->dispatch(new GetSubMenus($namespace));
+                }
+            ),
+            new \Twig_SimpleFunction(
+                'getInteractiveMenus',
+                function () {
+                    return $this->dispatch(new GetInteractiveMenus());
                 }
             ),
             new \Twig_SimpleFunction(
