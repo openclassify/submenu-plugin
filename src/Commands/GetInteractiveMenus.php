@@ -101,7 +101,17 @@ class GetInteractiveMenus
 
                 $sections = $this->buildSection($module);
 
+
                 foreach ($sections as $section) {
+
+                    if ($module->slug && in_array($module->slug,['variables', 'system', 'redirects', 'repeaters'])) {
+                       $parent = 'anomaly.module.settings';
+                    } else {
+                        $parent = $module->parent;
+                    }
+
+                    $navigation = $this->checkSubMenuActive($navigation, $parent, $section['attributes']['href']);
+
                     $links->add([
                         'title' => $section['title'],
                         'slug' => $section['slug'],
@@ -132,28 +142,6 @@ class GetInteractiveMenus
     public function buildSection($module)
     {
         $sections = $module->getSections();
-
-//        foreach ($sections as $slug => &$section) {
-//            if (isset($section['sections'])) {
-//                foreach ($section['sections'] as $key => $child) {
-//
-//                    /**
-//                     * It's a slug only!
-//                     */
-//                    if (is_string($child)) {
-//
-//                        $key = $child;
-//
-//                        $child = ['slug' => $child];
-//                    }
-//
-//                    $child['parent'] = array_get($section, 'slug', $slug);
-//                    $child['slug'] = array_get($child, 'slug', $key);
-//
-//                    $sections[$key] = $child;
-//                }
-//            }
-//        }
 
         /*
          * Loop over each section and make sense of the input
@@ -290,5 +278,20 @@ class GetInteractiveMenus
         }
 
         return $sections;
+    }
+
+    function checkSubMenuActive($navigation, $parent, $href)
+    {
+        $parent = explode('.',$parent);
+        $parent_slug = end($parent);
+
+        $is_active = (!Str::contains(request()->url(), $href)) ? false : true;
+
+        if ($is_active)
+        {
+            $navigation[$parent_slug]['active'] = $is_active;
+        }
+
+        return $navigation;
     }
 }
