@@ -6,7 +6,6 @@ use Anomaly\Streams\Platform\Ui\Icon\Command\GetIcon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Str;
-use Visiosoft\SubmenuPlugin\SubmenuCollection;
 
 class GetInteractiveMenus
 {
@@ -71,69 +70,8 @@ class GetInteractiveMenus
                 ];
             }
 
-
-//            $items = app('module.collection')->installed();
-//
-//            $parent = $item['slug'];
-//
-//            $modules = $items->filter(
-//                function ($addon) use ($parent) {
-//                    return (isset($addon->parent) && $addon->parent == $parent);
-//                }
-//            );
-//
-//            if ($parent == "anomaly.module.settings") {
-//                $modules = $items->filter(
-//                    function ($addon) use ($parent) {
-//                        return in_array($addon->slug, ['variables', 'system', 'redirects', 'repeaters']);
-//                    }
-//                );
-//            }
-
-//            $sub_menus = [];
-//
-//            foreach ($modules as $module) {
-//
-//                $remove_addons[] = $module->slug;
-//
-//                $links = new SubmenuCollection();
-//
-//                $sections = $this->buildSection($module);
-//
-//
-//                foreach ($sections as $section) {
-//
-//                    if ($module->slug && in_array($module->slug, ['variables', 'system', 'redirects', 'repeaters'])) {
-//                        $parent = 'anomaly.module.settings';
-//                    } else {
-//                        $parent = $module->parent;
-//                    }
-//
-//                    $navigation = $this->checkSubMenuActive($navigation, $parent, $section['attributes']['href']);
-//
-//                    $links->add([
-//                        'title' => $section['title'],
-//                        'slug' => $section['slug'],
-//                        'href' => $section['attributes']['href'],
-//                    ]);
-//                }
-//
-//                $sub_menus[$module->slug]['links'] = $links;
-//                $sub_menus[$module->slug]['title'] = $module->namespace . "::addon.title";
-//            }
-
-//            $menu['sub_menus'] = $sub_menus;
-
             $navigation[$index]['sections'] = $menu;
         }
-//
-//        $navigation = array_filter(
-//            $navigation,
-//            function ($key) use ($remove_addons) {
-//                return !in_array($key, $remove_addons);
-//            },
-//            ARRAY_FILTER_USE_KEY
-//        );
 
         $navigation = $this->grouping($navigation);
         $navigation = $this->checkActive($navigation);
@@ -314,18 +252,6 @@ class GetInteractiveMenus
                 }
             }
         }
-
-//        dd($navigation);
-
-
-//        $parent = explode('.', $parent);
-//        $parent_slug = end($parent);
-//
-//
-//        if ($is_active) {
-//            $navigation[$parent_slug]['active'] = $is_active;
-//        }
-
         return $navigation;
     }
 }
