@@ -58,85 +58,105 @@ class GetInteractiveMenus
 
             $module = app('addon.collection')->get($item['slug']);
 
-            $menu = [
-                'main' => new SubmenuCollection()
-            ];
+            $menu = array();
 
             $sections = $this->buildSection($module);
 
             foreach ($sections as $section) {
-                $menu['main']->add([
+                $menu[] = [
                     'title' => $section['title'],
                     'slug' => $section['slug'],
+                    'active' => false,
                     'href' => $section['attributes']['href'],
-                ]);
+                ];
             }
 
 
-            $items = app('module.collection')->installed();
+//            $items = app('module.collection')->installed();
+//
+//            $parent = $item['slug'];
+//
+//            $modules = $items->filter(
+//                function ($addon) use ($parent) {
+//                    return (isset($addon->parent) && $addon->parent == $parent);
+//                }
+//            );
+//
+//            if ($parent == "anomaly.module.settings") {
+//                $modules = $items->filter(
+//                    function ($addon) use ($parent) {
+//                        return in_array($addon->slug, ['variables', 'system', 'redirects', 'repeaters']);
+//                    }
+//                );
+//            }
 
-            $parent = $item['slug'];
+//            $sub_menus = [];
+//
+//            foreach ($modules as $module) {
+//
+//                $remove_addons[] = $module->slug;
+//
+//                $links = new SubmenuCollection();
+//
+//                $sections = $this->buildSection($module);
+//
+//
+//                foreach ($sections as $section) {
+//
+//                    if ($module->slug && in_array($module->slug, ['variables', 'system', 'redirects', 'repeaters'])) {
+//                        $parent = 'anomaly.module.settings';
+//                    } else {
+//                        $parent = $module->parent;
+//                    }
+//
+//                    $navigation = $this->checkSubMenuActive($navigation, $parent, $section['attributes']['href']);
+//
+//                    $links->add([
+//                        'title' => $section['title'],
+//                        'slug' => $section['slug'],
+//                        'href' => $section['attributes']['href'],
+//                    ]);
+//                }
+//
+//                $sub_menus[$module->slug]['links'] = $links;
+//                $sub_menus[$module->slug]['title'] = $module->namespace . "::addon.title";
+//            }
 
-            $modules = $items->filter(
-                function ($addon) use ($parent) {
-                    return (isset($addon->parent) && $addon->parent == $parent);
-                }
-            );
+//            $menu['sub_menus'] = $sub_menus;
 
-            if ($parent == "anomaly.module.settings") {
-                $modules = $items->filter(
-                    function ($addon) use ($parent) {
-                        return in_array($addon->slug, ['variables', 'system', 'redirects', 'repeaters']);
-                    }
-                );
-            }
-
-            $sub_menus = [];
-
-            foreach ($modules as $module) {
-
-                $remove_addons[] = $module->slug;
-
-                $links = new SubmenuCollection();
-
-                $sections = $this->buildSection($module);
-
-
-                foreach ($sections as $section) {
-
-                    if ($module->slug && in_array($module->slug,['variables', 'system', 'redirects', 'repeaters'])) {
-                       $parent = 'anomaly.module.settings';
-                    } else {
-                        $parent = $module->parent;
-                    }
-
-                    $navigation = $this->checkSubMenuActive($navigation, $parent, $section['attributes']['href']);
-
-                    $links->add([
-                        'title' => $section['title'],
-                        'slug' => $section['slug'],
-                        'href' => $section['attributes']['href'],
-                    ]);
-                }
-
-                $sub_menus[$module->slug]['links'] = $links;
-                $sub_menus[$module->slug]['title'] = $module->namespace . "::addon.title";
-            }
-
-            $menu['sub_menus'] = $sub_menus;
-
-            $navigation[$index]['menus'] = $menu;
+            $navigation[$index]['sections'] = $menu;
         }
+//
+//        $navigation = array_filter(
+//            $navigation,
+//            function ($key) use ($remove_addons) {
+//                return !in_array($key, $remove_addons);
+//            },
+//            ARRAY_FILTER_USE_KEY
+//        );
 
-        $navigation = array_filter(
-            $navigation,
-            function ($key) use ($remove_addons) {
-                return !in_array($key, $remove_addons);
-            },
-            ARRAY_FILTER_USE_KEY
-        );
+        $navigation = $this->grouping($navigation);
+        $navigation = $this->checkActive($navigation);
 
         return $navigation;
+    }
+
+    public function grouping($navigation)
+    {
+        $list = config('visiosoft.plugin.submenu::groups');
+        $new_navigation = [];
+        foreach ($list as $list_key => $item) {
+            if (isset($navigation[$list_key])) {
+                $addons = isset($new_navigation[$item]['addons']) ? $new_navigation[$item]['addons'] : array();
+                $addons[$list_key] = $navigation[$list_key];
+
+                $new_navigation[$item]['addons'] = $addons;
+                $new_navigation[$item]['title'] = trans('visiosoft.plugin.submenu::group.' . $item);
+                $new_navigation[$item]['active'] = false;
+            }
+        }
+
+        return $new_navigation;
     }
 
     public function buildSection($module)
@@ -280,17 +300,31 @@ class GetInteractiveMenus
         return $sections;
     }
 
-    function checkSubMenuActive($navigation, $parent, $href)
+    function checkActive($navigation)
     {
-        $parent = explode('.',$parent);
-        $parent_slug = end($parent);
 
-        $is_active = (!Str::contains(request()->url(), $href)) ? false : true;
-
-        if ($is_active)
-        {
-            $navigation[$parent_slug]['active'] = $is_active;
+        foreach ($navigation as $group_key => $group) {
+            foreach ($group['addons'] as $addon_key => $addon) {
+                foreach ($addon['sections'] as $section_key => $section) {
+                    $is_active_section = (request()->url() === $section['href']) ? true : false;
+                    $is_active = (!Str::contains(request()->url(), $section['href'])) ? false : true;
+                    $navigation[$group_key]['addons'][$addon_key]['sections'][$section_key]['active'] = $is_active_section;
+                    $navigation[$group_key]['addons'][$addon_key]['active'] = $navigation[$group_key]['addons'][$addon_key]['active'] ?: $is_active;
+                    $navigation[$group_key]['active'] = $navigation[$group_key]['active'] ?: $is_active;
+                }
+            }
         }
+
+//        dd($navigation);
+
+
+//        $parent = explode('.', $parent);
+//        $parent_slug = end($parent);
+//
+//
+//        if ($is_active) {
+//            $navigation[$parent_slug]['active'] = $is_active;
+//        }
 
         return $navigation;
     }
