@@ -13,7 +13,6 @@ class GetInteractiveMenus
 
     public function handle(ModuleCollection $modules)
     {
-        $remove_addons = [];
         $navigation = [];
 
         /* @var Module $module */
@@ -76,7 +75,6 @@ class GetInteractiveMenus
         $navigation = $this->grouping($navigation);
         $navigation = $this->checkActive($navigation);
 
-//        dd($navigation);
         return $navigation;
     }
 
