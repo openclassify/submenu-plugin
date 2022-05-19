@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g transform="translate(-3891 -8790)">
+    <rect id="apps-2" data-name="apps" width="20" height="20" transform="translate(3891 8790)" fill="#fff" opacity="0"/>
+    <path id="apps-3" data-name="apps" d="M20.991,2a1,1,0,0,0-1,1v.637c-1.708,2.118-5.279,3.353-8,3.363h-7a3,3,0,0,0-3,3v2a3,3,0,0,0,3,3H6.475l-2.4,5.606A1,1,0,0,0,4.991,22h4A1,1,0,0,0,9.91,21.4l2.724-6.356c2.487.183,5.788,1.386,7.357,3.325V19a1,1,0,0,0,2,0V3a1,1,0,0,0-1-1Zm-16,11a1,1,0,0,1-1-1V10a1,1,0,0,1,1-1h2v4Zm3.341,7H6.508L8.65,15h1.824Zm11.659-4.478a13.97,13.97,0,0,0-8-2.522h-3V9h3a13.971,13.971,0,0,0,8-2.522Z" transform="translate(3889.009 8787.998)" fill="#bfd3e9"/>
+  </g>
+</svg>

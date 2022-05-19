@@ -76,6 +76,7 @@ class GetInteractiveMenus
         $navigation = $this->grouping($navigation);
         $navigation = $this->checkActive($navigation);
 
+//        dd($navigation);
         return $navigation;
     }
 
@@ -90,6 +91,7 @@ class GetInteractiveMenus
 
                 $new_navigation[$item]['addons'] = $addons;
                 $new_navigation[$item]['title'] = trans('visiosoft.plugin.submenu::group.' . $item);
+                $new_navigation[$item]['icon'] = 'visiosoft.plugin.submenu::images/' . $item . '.svg';
                 $new_navigation[$item]['active'] = false;
             }
         }
