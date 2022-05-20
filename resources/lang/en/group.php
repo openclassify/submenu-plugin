@@ -7,4 +7,5 @@ return [
     'apps' => 'Apps',
     'cms' => 'Cms',
     'settings' => 'Settings',
+    'site-management' => 'Site Management',
 ];

@@ -28,4 +28,9 @@ return [
         'api'=> 'settings',
         'locations'=> 'settings',
         'blocks'=> 'settings',
+        'site'=> 'site-management',
+        'subscriptions'=> 'site-management',
+        'jenkins'=> 'site-management',
+        'cwp'=> 'site-management',
+        'satis'=> 'site-management',
 ];

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20.004" viewBox="0 0 20 20.004">
+  <g id="site_management" transform="translate(-4294 -8169.996)">
+    <rect id="Rectangle_4060" data-name="Rectangle 4060" width="20" height="20" transform="translate(4294 8170)" fill="#fff" opacity="0"/>
+    <path id="sitemap" d="M21,13H19V11a1,1,0,0,0-1-1H13V9h2a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1H9A1,1,0,0,0,8,2V8A1,1,0,0,0,9,9h2v1H6a1,1,0,0,0-1,1v2H3a1,1,0,0,0-1,1v6a1,1,0,0,0,1,1H9a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1H7V12H17v1H15a1,1,0,0,0-1,1v6a1,1,0,0,0,1,1h6a1,1,0,0,0,1-1V14A1,1,0,0,0,21,13ZM8,15v4H4V15Zm2-8V3h4V7ZM20,19H16V15h4Z" transform="translate(4292 8168.996)" fill="#bfd3e9"/>
+  </g>
+</svg>

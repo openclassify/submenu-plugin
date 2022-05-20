@@ -82,16 +82,20 @@ class GetInteractiveMenus
     {
         $list = config('visiosoft.plugin.submenu::groups');
         $new_navigation = [];
-        foreach ($list as $list_key => $item) {
-            if (isset($navigation[$list_key])) {
-                $addons = isset($new_navigation[$item]['addons']) ? $new_navigation[$item]['addons'] : array();
-                $addons[$list_key] = $navigation[$list_key];
 
-                $new_navigation[$item]['addons'] = $addons;
-                $new_navigation[$item]['title'] = trans('visiosoft.plugin.submenu::group.' . $item);
-                $new_navigation[$item]['icon'] = 'visiosoft.plugin.submenu::images/' . $item . '.svg';
-                $new_navigation[$item]['active'] = false;
+        foreach ($navigation as $addon_key => $addon) {
+            if (isset($list[$addon_key])) {
+                $item = $list[$addon_key];
+            } else {
+                $item = 'apps';
             }
+            $addons = isset($new_navigation[$item]['addons']) ? $new_navigation[$item]['addons'] : array();
+            $addons[$addon_key] = $addon;
+
+            $new_navigation[$item]['addons'] = $addons;
+            $new_navigation[$item]['title'] = trans('visiosoft.plugin.submenu::group.' . $item);
+            $new_navigation[$item]['icon'] = 'visiosoft.plugin.submenu::images/' . $item . '.svg';
+            $new_navigation[$item]['active'] = false;
         }
 
         return $new_navigation;
@@ -240,7 +244,6 @@ class GetInteractiveMenus
 
     function checkActive($navigation)
     {
-
         foreach ($navigation as $group_key => $group) {
             foreach ($group['addons'] as $addon_key => $addon) {
                 foreach ($addon['sections'] as $section_key => $section) {
