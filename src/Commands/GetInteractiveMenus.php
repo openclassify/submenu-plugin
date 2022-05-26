@@ -23,7 +23,7 @@ class GetInteractiveMenus
         }
 
         $navigation = array_map(
-            function (Module $module) {
+            function ($module) {
                 return [
                     'breadcrumb' => $module->getName(),
                     'icon' => $module->getIcon(),
