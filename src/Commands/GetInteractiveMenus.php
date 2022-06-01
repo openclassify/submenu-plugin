@@ -74,7 +74,13 @@ class GetInteractiveMenus
 
         $navigation = $this->grouping($navigation);
         $navigation = $this->checkActive($navigation);
+        $navigation = $this->filter($navigation);
 
+        return $navigation;
+    }
+
+    public function filter($navigation)
+    {
         return $navigation;
     }
 
