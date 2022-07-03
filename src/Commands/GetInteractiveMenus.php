@@ -56,6 +56,9 @@ class GetInteractiveMenus
 
             $module = app('addon.collection')->get($item['slug']);
 
+            $navigation[$index]['root_menu'] = (isset($module->root_menu)) ? $module->root_menu : null;
+            $navigation[$index]['root_menu_icon'] = (isset($module->root_menu_icon)) ? $module->root_menu_icon : null;
+
             $menu = array();
 
             $sections = $this->buildSection($module);
@@ -84,18 +87,31 @@ class GetInteractiveMenus
         $new_navigation = [];
 
         foreach ($navigation as $addon_key => $addon) {
-            if (isset($list[$addon_key])) {
-                $item = $list[$addon_key];
-            } else {
-                $item = 'apps';
-            }
-            $addons = isset($new_navigation[$item]['addons']) ? $new_navigation[$item]['addons'] : array();
-            $addons[$addon_key] = $addon;
+            if ($addon['root_menu']) {
+                $item = strtolower($addon['root_menu']);
 
-            $new_navigation[$item]['addons'] = $addons;
-            $new_navigation[$item]['title'] = trans('visiosoft.plugin.submenu::group.' . $item);
-            $new_navigation[$item]['icon'] = 'visiosoft.plugin.submenu::images/' . $item . '.svg';
-            $new_navigation[$item]['active'] = false;
+                $addons = isset($new_navigation[$item]['addons']) ? $new_navigation[$item]['addons'] : array();
+                $addons[$addon_key] = $addon;
+
+                $new_navigation[$item]['addons'] = $addons;
+                $new_navigation[$item]['title'] = $addon['root_menu'];
+                $new_navigation[$item]['icon'] = (isset($new_navigation[$item]['icon']) && $new_navigation[$item]['icon']) ? $new_navigation[$item]['icon'] : $addon['root_menu_icon'];
+                $new_navigation[$item]['active'] = false;
+
+            } else {
+                if (isset($list[$addon_key])) {
+                    $item = $list[$addon_key];
+                } else {
+                    $item = 'apps';
+                }
+                $addons = isset($new_navigation[$item]['addons']) ? $new_navigation[$item]['addons'] : array();
+                $addons[$addon_key] = $addon;
+
+                $new_navigation[$item]['addons'] = $addons;
+                $new_navigation[$item]['title'] = trans('visiosoft.plugin.submenu::group.' . $item);
+                $new_navigation[$item]['icon'] = 'visiosoft.plugin.submenu::images/' . $item . '.svg';
+                $new_navigation[$item]['active'] = false;
+            }
         }
 
         return $new_navigation;
