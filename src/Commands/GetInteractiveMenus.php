@@ -2,12 +2,6 @@
 
 use Anomaly\Streams\Platform\Addon\Module\Module;
 use Anomaly\Streams\Platform\Addon\Module\ModuleCollection;
-use Anomaly\Streams\Platform\Support\Resolver;
-use Anomaly\Streams\Platform\Ui\ControlPanel\Component\Navigation\NavigationCollection;
-use Anomaly\Streams\Platform\Ui\ControlPanel\Component\Section\SectionCollection;
-use Anomaly\Streams\Platform\Ui\ControlPanel\Component\Shortcut\ShortcutCollection;
-use Anomaly\Streams\Platform\Ui\ControlPanel\ControlPanel;
-use Anomaly\Streams\Platform\Ui\ControlPanel\ControlPanelBuilder;
 use Anomaly\Streams\Platform\Ui\Icon\Command\GetIcon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\UrlGenerator;
@@ -125,20 +119,7 @@ class GetInteractiveMenus
 
     public function buildSection($module)
     {
-        $resolver = app(Resolver::class);
-
         $sections = $module->getSections();
-
-        if (!$sections && class_exists($sections = get_class($module->getObject()) . 'Sections')) {
-
-            $cp = new ControlPanel(collect([]),new SectionCollection(),new ShortcutCollection(),new NavigationCollection());
-
-            $builder = new ControlPanelBuilder($cp);
-
-            $resolver->resolve($sections . '@handle', compact('builder'));
-
-            $sections = $builder->getSections();
-        }
 
         /*
          * Loop over each section and make sense of the input
