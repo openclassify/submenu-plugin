@@ -134,6 +134,7 @@ class GetInteractiveMenus
             $cp = new ControlPanel(collect([]),new SectionCollection(),new ShortcutCollection(),new NavigationCollection());
 
             $builder = new ControlPanelBuilder($cp);
+            $builder->setSections([]);
 
             $resolver->resolve($sections . '@handle', compact('builder'));
 
