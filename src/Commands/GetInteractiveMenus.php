@@ -120,6 +120,17 @@ class GetInteractiveMenus
             }
         }
 
+        foreach ($new_navigation as $index => $item) {
+            $new_navigation[$index]['addons'] = count($new_navigation[$index]['addons']) < 2 ? array_first($new_navigation[$index]['addons'])['sections'] : $new_navigation[$index]['addons'];
+            foreach ($item['addons'] as $addon_key => $addon) {
+                if (count($addon['sections']) < 2)
+                {
+                    $new_navigation[$index]['addons'][$addon_key] = array_first($addon['sections']);
+                    $new_navigation[$index]['addons'][$addon_key]['title'] = $addon['title'];
+                }
+            }
+        }
+
         return $new_navigation;
     }
 
@@ -131,7 +142,7 @@ class GetInteractiveMenus
 
         if (!$sections && class_exists($sections = get_class($module->getObject()) . 'Sections')) {
 
-            $cp = new ControlPanel(collect([]),new SectionCollection(),new ShortcutCollection(),new NavigationCollection());
+            $cp = new ControlPanel(collect([]), new SectionCollection(), new ShortcutCollection(), new NavigationCollection());
 
             $builder = new ControlPanelBuilder($cp);
             $builder->setSections([]);
@@ -282,10 +293,16 @@ class GetInteractiveMenus
     {
         foreach ($navigation as $group_key => $group) {
             foreach ($group['addons'] as $addon_key => $addon) {
-                foreach ($addon['sections'] as $section_key => $section) {
-                    $is_active_section = (request()->url() === $section['href']) ? true : false;
-                    $is_active = (!Str::contains(request()->url(), $section['href'])) ? false : true;
-                    $navigation[$group_key]['addons'][$addon_key]['sections'][$section_key]['active'] = $is_active_section;
+                if (isset($group['addons'][$addon_key]['sections'])) {
+                    foreach ($addon['sections'] as $section_key => $section) {
+                        $is_active_section = (request()->url() === $section['href']) ? true : false;
+                        $is_active = (!Str::contains(request()->url(), $section['href'])) ? false : true;
+                        $navigation[$group_key]['addons'][$addon_key]['sections'][$section_key]['active'] = $is_active_section;
+                        $navigation[$group_key]['addons'][$addon_key]['active'] = $navigation[$group_key]['addons'][$addon_key]['active'] ?: $is_active;
+                        $navigation[$group_key]['active'] = $navigation[$group_key]['active'] ?: $is_active;
+                    }
+                } else {
+                    $is_active = (!Str::contains(request()->url(), $addon['href'])) ? false : true;
                     $navigation[$group_key]['addons'][$addon_key]['active'] = $navigation[$group_key]['addons'][$addon_key]['active'] ?: $is_active;
                     $navigation[$group_key]['active'] = $navigation[$group_key]['active'] ?: $is_active;
                 }
