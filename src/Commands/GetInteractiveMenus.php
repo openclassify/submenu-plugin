@@ -68,8 +68,14 @@ class GetInteractiveMenus
             $menu = array();
 
             $sections = $this->buildSection($module);
+            
+            if (!$sections) {
+                unset($navigation[$index]);
+                continue;
+            }
 
             foreach ($sections as $section) {
+
                 $menu[] = [
                     'title' => $section['title'],
                     'slug' => $section['slug'],
@@ -123,8 +129,7 @@ class GetInteractiveMenus
         foreach ($new_navigation as $index => $item) {
             $new_navigation[$index]['addons'] = count($new_navigation[$index]['addons']) < 2 ? array_first($new_navigation[$index]['addons'])['sections'] : $new_navigation[$index]['addons'];
             foreach ($item['addons'] as $addon_key => $addon) {
-                if (count($addon['sections']) < 2)
-                {
+                if (count($addon['sections']) < 2) {
                     $new_navigation[$index]['addons'][$addon_key] = array_first($addon['sections']);
                     $new_navigation[$index]['addons'][$addon_key]['title'] = $addon['title'];
                 }
@@ -140,6 +145,7 @@ class GetInteractiveMenus
 
         $sections = $module->getSections();
 
+
         if (!$sections && class_exists($sections = get_class($module->getObject()) . 'Sections')) {
 
             $cp = new ControlPanel(collect([]), new SectionCollection(), new ShortcutCollection(), new NavigationCollection());
@@ -152,6 +158,10 @@ class GetInteractiveMenus
             $sections = $builder->getSections();
         }
 
+        if (!is_array($sections)) {
+            $sections = array();
+        }
+        
         /*
          * Loop over each section and make sense of the input
          * provided for the given module.
