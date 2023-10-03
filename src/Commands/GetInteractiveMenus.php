@@ -81,8 +81,8 @@ class GetInteractiveMenus
                     'slug' => $section['slug'],
                     'active' => false,
                     'href' => $section['attributes']['href'],
-                    'data-toggle' => isset($section['attributes']['data-toggle']) ? $section['attributes']['data-toggle'] : null,
-                    'data-target' => isset($section['attributes']['data-target']) ? $section['attributes']['data-target'] : null,
+                    'data-toggle' => $section['attributes']['data-toggle'] ?? null ,
+                    'data-target' => $section['attributes']['data-target'] ?? null,
                 ];
             }
 
