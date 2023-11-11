@@ -58,7 +58,7 @@ class GetInteractiveMenus
 
             $icon = $navigation[$index]['icon'];
 
-            $navigation[$index]['icon'] = $this->dispatchNow(new GetIcon($icon));
+            $navigation[$index]['icon'] = $this->dispatchSync(new GetIcon($icon));
 
             $module = app('addon.collection')->get($item['slug']);
 

@@ -13,19 +13,19 @@ class SubmenuPlugin extends Plugin
             new \Twig_SimpleFunction(
                 'getSubmenus',
                 function ($namespace) {
-                    return $this->dispatch(new GetSubMenus($namespace));
+                    return $this->dispatchSync(new GetSubMenus($namespace));
                 }
             ),
             new \Twig_SimpleFunction(
                 'getInteractiveMenus',
                 function () {
-                    return $this->dispatch(new GetInteractiveMenus());
+                    return $this->dispatchSync(new GetInteractiveMenus());
                 }
             ),
             new \Twig_SimpleFunction(
                 'getSections',
                 function ($namespace) {
-                    return $this->dispatch(new GetSections($namespace));
+                    return $this->dispatchSync(new GetSections($namespace));
                 }
             )
         ];
