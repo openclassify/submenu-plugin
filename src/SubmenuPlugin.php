@@ -10,19 +10,19 @@ class SubmenuPlugin extends Plugin
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction(
+            new \Twig\TwigFunction(
                 'getSubmenus',
                 function ($namespace) {
                     return $this->dispatchSync(new GetSubMenus($namespace));
                 }
             ),
-            new \Twig_SimpleFunction(
+            new \Twig\TwigFunction(
                 'getInteractiveMenus',
                 function () {
                     return $this->dispatchSync(new GetInteractiveMenus());
                 }
             ),
-            new \Twig_SimpleFunction(
+            new \Twig\TwigFunction(
                 'getSections',
                 function ($namespace) {
                     return $this->dispatchSync(new GetSections($namespace));
